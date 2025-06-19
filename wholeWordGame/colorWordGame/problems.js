@@ -41,7 +41,7 @@ const problems = [
     words: ["나무"]
   },
   {
-    image: "images/그림_나비.pngg",
+    image: "images/그림_나비.png",
     words: ["나비"]
   },
   {
