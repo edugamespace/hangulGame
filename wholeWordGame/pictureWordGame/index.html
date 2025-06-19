@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Picture Word Game</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+      background-color: #fdfdfd;
+      padding: 10px;
+      min-height: 100vh;             /* 화면 높이 전체 사용 */
+    }
+    #progress-bar {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 6px;
+      max-width: 500px;
+      margin: 0 auto 16px;
+    }
+    .progress-box {
+      width: 36px;
+      height: 36px;
+      border-radius: 6px;
+      background-color: #eee;
+      cursor: pointer;
+    }
+    .progress-box.correct { background-color: #7dd3fc; }
+    .progress-box.incorrect { background-color: #f87171; }
+
+    #image-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 70px;
+      margin-bottom: 30px;
+    }
+    #problemImage {
+      max-width: 250px;
+      max-height: 250px;
+    }
+    #game-container {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .card {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      border-radius: 12px;
+      box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .card img {
+      max-width: 100%;
+      max-height: 100%;
+    }
+    .arrow-button {
+      font-size: 32px;
+      cursor: pointer;
+      user-select: none;
+    }
+    #celebration {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      z-index: 1000;
+    }
+    
+    #celebration button {
+      padding: 16px 32px;
+      font-size: 18px;
+      background-color: #4da6ff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    #celebration button:hover {
+      background-color: #1d8ef1;
+    }
+
+    /* ✅ 버튼 간 간격 추가 */
+#celebration button + button {
+  margin-top: 20px;
+
+  .score-text {
+  font-size: 48px;
+  color: #000000;
+   margin-bottom: 200px;
+}
+.score-message-good {
+  font-size: 38px;
+  color: #72defc;
+   margin-bottom: 100px;
+}
+.score-message-bad {
+  font-size: 38px;
+  color: #fc9373;
+   margin-bottom: 100px;
+}
+
+
+  </style>
+</head>
+<body>
+  <div id="progress-bar"></div>
+
+  <div id="image-container">
+    <span class="arrow-button" onclick="previousProblem()">&#9664;</span>
+    <img id="problemImage" src="" alt="문제 그림" />
+    <span class="arrow-button" onclick="nextProblem()">&#9654;</span>
+  </div>
+
+  <div id="game-container"></div>
+
+  <div id="celebration">
+    <h1 id="final-score-text"></h1>
+    <button onclick="location.reload()">다시 할게요.</button>
+     <button onclick="window.location.href='https://withgrowing.tistory.com/entry/%EA%B2%8C%EC%9E%84-%ED%95%99%EC%8A%B5-%EC%84%BC%ED%84%B0-%ED%99%88'">그만 할래요.</button>
+  </div>
+
+  <script src="problems.js"></script>
+  <script>
+    const imageEl = document.getElementById('problemImage');
+    const container = document.getElementById('game-container');
+    const progressBar = document.getElementById('progress-bar');
+    const celebration = document.getElementById('celebration');
+
+    const allWords = [...new Set(problems.flatMap(p => p.words))];
+    const selectedProblems = problems.sort(() => Math.random() - 0.5).slice(0, 20);
+    const results = Array(selectedProblems.length).fill(null);
+
+    let currentAnswer = [];
+    let currentStep = 0;
+    let currentIndex = 0;
+
+    function playSound(word) {
+      const audio = new Audio(`sounds/${word}.mp3`);
+      audio.play();
+    }
+
+    function updateProgressBar() {
+      progressBar.innerHTML = '';
+      results.forEach((result, index) => {
+        const box = document.createElement('div');
+        box.className = 'progress-box';
+        if (result === true) box.classList.add('correct');
+        else if (result === false) box.classList.add('incorrect');
+        box.onclick = () => {
+          currentIndex = index;
+          loadProblem(currentIndex);
+        };
+        progressBar.appendChild(box);
+      });
+    }
+
+    function loadProblem(index) {
+      const problem = selectedProblems[index];
+      imageEl.src = problem.image;
+      currentAnswer = problem.words;
+      currentStep = 0;
+
+      const distractors = allWords.filter(w => !currentAnswer.includes(w));
+      const extras = distractors.sort(() => Math.random() - 0.5).slice(0, 8 - currentAnswer.length);
+      const wordsToShow = [...currentAnswer, ...extras].sort(() => Math.random() - 0.5);
+
+      container.innerHTML = '';
+      wordsToShow.forEach(word => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        const img = document.createElement('img');
+        img.src = `images/그림글자_${word}.png`;
+        img.alt = word;
+        card.appendChild(img);
+        card.onclick = () => {
+          playSound(word);
+          if (word === currentAnswer[currentStep]) {
+            currentStep++;
+            if (currentStep === currentAnswer.length) {
+              results[currentIndex] = true;
+              updateProgressBar();
+              setTimeout(nextProblem, 700);
+            }
+          } else {
+            results[currentIndex] = false;
+            updateProgressBar();
+            setTimeout(nextProblem, 700);
+          }
+        };
+        container.appendChild(card);
+      });
+    }
+
+  function nextProblem() {
+  if (results.every(r => r !== null)) {
+    const correctCount = results.filter(r => r).length;
+    const score100 = Math.round((correctCount / results.length) * 100);
+    let message = "";
+
+     if (score100 >= 55) {
+      message = `
+      
+        <div style="font-size: 200px; color: #0a0000;">${score100}점</div>
+          <div style="font-size: 38px; color: #72defc;">🎉 참 잘했어요!</div>
+      `;
+    } else {
+      message = `
+       
+        <div style="font-size: 200px; color: #0a0000;">${score100}점</div>
+         <div style="font-size: 38px; color: #fc9373;">😊 조금 더 연습해 볼까요?</div>
+      `;
+    }
+
+    document.getElementById('final-score-text').innerHTML = message;
+    celebration.style.display = 'flex';
+    return;
+  }
+
+  if (currentIndex < selectedProblems.length - 1) {
+    currentIndex++;
+    loadProblem(currentIndex);
+  }
+}
+
+    function previousProblem() {
+      if (currentIndex > 0) {
+        currentIndex--;
+        loadProblem(currentIndex);
+      }
+    }
+
+    updateProgressBar();
+    loadProblem(currentIndex);
+  </script>
+</body>
+</html>
