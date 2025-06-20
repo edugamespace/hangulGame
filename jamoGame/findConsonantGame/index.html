@@ -34,29 +34,42 @@
       gap: 60px;
       margin-bottom: 40px;
     }
-    #problem-card {
-      border-radius: 30px;
-      overflow: hidden;
-      box-shadow: none;
-      padding: 0;
-    }
+   #problem-card {
+  position: relative; /* 기준 위치로 설정 */
+  border-radius: 30px;
+  overflow: hidden;
+  box-shadow: none;
+  padding: 0;
+  text-align: center;
+  margin: 0 auto;
+}
+
     #problemImage {
       max-width: 100%;
       max-height: 100%;
+        border-radius: inherit; /* ✅ 추가 */
+
     }
     #game-container {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(7, 1fr);
       gap: 16px;
       max-width: 800px;
       margin: 0 auto;
     }
+
+.sound-button {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  font-size: 32px;
+  cursor: pointer;
+}
+
     .card {
       width: 100%;
       aspect-ratio: 1 / 1;
       border-radius: 12px;
-      box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
-      background: white;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -109,7 +122,6 @@
 <div id="image-container">
   <div id="problem-card" style="text-align: center;">
     <img id="problemImage" src="" alt="문제" />
-    <div id="sound-button-container" style="margin-top: 10px;"></div>
   </div>
 </div>
 </div>
@@ -118,7 +130,7 @@
   <div id="final-score-text"></div>
   <div id="final-score-message"></div>
   <button class="retry-btn" onclick="location.reload()">다시 할게요</button>
-  <button class="exit-btn" onclick="window.location.href='https://raimtree.tistory.com/'">그만 할래요</button>
+  <button class="exit-btn" onclick="window.location.href='https://withgrowing.tistory.com/entry/%EA%B2%8C%EC%9E%84-%ED%95%99%EC%8A%B5-%EC%84%BC%ED%84%B0-%ED%99%88'">그만 할래요</button>
 </div>
 <script src="script.js"></script>
 </body>
