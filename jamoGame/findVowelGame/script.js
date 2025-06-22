@@ -86,19 +86,12 @@ function loadProblem(index) {
   imageEl.src = `images/problems/${prob.letter}.png`;
   imageEl.alt = prob.letter;
 
+  // 이미지 클릭 시 음성 재생
+imageEl.onclick = () => playLetterSound(prob.letter);
+
   // 자동 음성 재생
   playLetterSound(prob.letter);
 
-  // 문제 카드 옆에 🔊 이모지 추가
- const problemCard = document.getElementById("problem-card");
-problemCard.querySelectorAll(".sound-button").forEach(btn => btn.remove());
-
-const soundBtn = document.createElement("span");
-soundBtn.textContent = "🔊";
-soundBtn.className = "sound-button"; // 스타일 적용을 위해 이 클래스 유지
-soundBtn.onclick = () => playLetterSound(prob.letter);
-
-problemCard.appendChild(soundBtn); // ✅ 문제카드에 붙이기
 
 
    // 모든 보기 초기화 및 생성

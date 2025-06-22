@@ -27,6 +27,13 @@ function updateProgressBar() {
     box.className = 'progress-box';
     if (res === true) box.classList.add('correct');
     else if (res === false) box.classList.add('incorrect');
+
+     // ✅ 클릭하면 해당 문제로 이동
+    box.onclick = () => {
+      currentIndex = i;
+      loadProblem(currentIndex);
+    };
+
     progressBar.appendChild(box);
   });
 }
@@ -41,7 +48,9 @@ function loadProblem(index) {
 
   // 이미지 설정
   imageEl.src = `images/pictures/${currentAnswer}.png`;
-  playSound(currentAnswer);
+  playSound(currentAnswer); //문제 출제 시 자동 재생
+  imageEl.onclick = () => playSound(currentAnswer); // ✅ 이미지 클릭 시 재생
+
 
   // 글자 박스 생성
   letterBoxes.innerHTML = '';
@@ -117,4 +126,8 @@ function nextProblem() {
 }
 
 updateProgressBar();
-loadProblem(currentIndex);
+
+document.body.addEventListener('click', function handleFirstClick() {
+  loadProblem(currentIndex);
+  document.body.removeEventListener('click', handleFirstClick); // 딱 한 번만 실행되도록
+}, { once: true });
