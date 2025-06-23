@@ -17,6 +17,22 @@ const allProblems = [
   { letter: "하", consonant: "ㅎ" }, { letter: "허", consonant: "ㅎ" }, { letter: "호", consonant: "ㅎ" }, { letter: "후", consonant: "ㅎ" }, { letter: "흐", consonant: "ㅎ" }, { letter: "히", consonant: "ㅎ" }, { letter: "해", consonant: "ㅎ" }, { letter: "헤", consonant: "ㅎ" }
 ];
 
+const consonantSoundMap = {
+  'ㄱ': '기역',
+  'ㄴ': '니은',
+  'ㄷ': '디귿',
+  'ㄹ': '리을',
+  'ㅁ': '미음',
+  'ㅂ': '비읍',
+  'ㅅ': '시옷',
+  'ㅇ': '이응',
+  'ㅈ': '지읒',
+  'ㅊ': '치읓',
+  'ㅋ': '키읔',
+  'ㅌ': '티읕',
+  'ㅍ': '피읖',
+  'ㅎ': '히읗'
+};
 
 const allConsonants = ['ㄱ','ㄴ','ㄷ','ㄹ','ㅁ','ㅂ','ㅅ','ㅇ','ㅈ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
 
@@ -53,6 +69,15 @@ function playLetterSound(letter) {
   audio.play();
 }
 
+function playConsonantNameSound(consonant) {
+  const name = consonantSoundMap[consonant];
+  if (name) {
+    const audio = new Audio(`sounds/${name}.mp3`);
+    audio.play();
+  }
+}
+
+
 function loadProblem(index) {
   const prob = problems[index];
   const correct = prob.consonant;
@@ -82,6 +107,8 @@ imageEl.onclick = () => playLetterSound(prob.letter);
     card.appendChild(img);
 
     card.onclick = () => {
+        playConsonantNameSound(con);  // ✅ 클릭한 자음의 이름 재생
+
       if (con === correct) {
         correctSound.play();
         results[index] = true;

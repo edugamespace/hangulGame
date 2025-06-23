@@ -79,6 +79,12 @@ function playLetterSound(letter) {
   audio.play();
 }
 
+function playVowelSound(vowel) {
+  const audio = new Audio(`sounds/${vowel}.mp3`);
+  audio.play();
+}
+
+
 function loadProblem(index) {
   const prob = problems[index];
   const correct = prob.vowel;
@@ -109,6 +115,8 @@ imageEl.onclick = () => playLetterSound(prob.letter);
     card.appendChild(img);
 
     card.onclick = () => {
+        playVowelSound(vow);  // ✅ 클릭한 모음 소리 재생
+
       if (vow === correct) {
         correctSound.play();
         results[index] = true;
