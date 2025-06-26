@@ -41,8 +41,8 @@ const wrongSound = new Audio('sounds/wrong.mp3');
 
 let currentIndex = 0;
 let results = Array(selectedProblems.length).fill(null);
+let filledCount = 0;
 let currentAnswer = [];
-let dropCount = 0;
 
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
@@ -71,37 +71,34 @@ function playSound(name) {
   new Audio(`sounds/${name}.mp3`).play();
 }
 
-function handleDrop(word, box) {
-  if (box.hasChildNodes()) return;
+function handleClick(word, card) {
+  if (filledCount >= 3) return;
 
-  const { index: originalIndex } = selectedProblems[currentIndex];
-  const boxIndex = parseInt(box.dataset.index) - 1;
-
+  const targetWord = currentAnswer[filledCount];
   playSound(word);
+
+  const box = boxes.children[filledCount];
+  const originalIndex = selectedProblems[currentIndex].index;
+  const wordIndex = selectedProblems[currentIndex].problem.indexOf(word);
   const img = document.createElement('img');
-  img.src = `images/${originalIndex + 1}_${box.dataset.index}_${word}.png`;
+  img.src = `images/${originalIndex + 1}_${filledCount + 1}_${word}.png`;
   img.style.width = '100%';
   img.style.height = '100%';
-  img.style.borderRadius = '12px';
   img.onerror = () => console.warn("이미지 로드 실패:", img.src);
   box.appendChild(img);
 
-  // 즉시 오답 처리
-  if (word !== currentAnswer[boxIndex]) {
+  if (word === targetWord) {
+    filledCount++;
+    card.classList.add("selected");
+    if (filledCount === 3) {
+      results[currentIndex] = true;
+      correctSound.play();
+      updateProgressBar();
+      setTimeout(nextProblem, 700);
+    }
+  } else {
     results[currentIndex] = false;
     wrongSound.play();
-    updateProgressBar();
-    setTimeout(nextProblem, 700);
-    return;
-  }
-
-  box.dataset.filled = word;
-  dropCount++;
-
-  if (dropCount === 3) {
-    const isCorrect = Array.from(boxes.children).every((box, idx) => box.dataset.filled === currentAnswer[idx]);
-    results[currentIndex] = isCorrect;
-    (isCorrect ? correctSound : wrongSound).play();
     updateProgressBar();
     setTimeout(nextProblem, 700);
   }
@@ -110,7 +107,7 @@ function handleDrop(word, box) {
 function loadProblem(index) {
   const { problem, index: originalIndex } = selectedProblems[index];
   currentAnswer = problem;
-  dropCount = 0;
+  filledCount = 0;
 
   boxes.innerHTML = '';
   for (let i = 0; i < 3; i++) {
@@ -122,13 +119,6 @@ function loadProblem(index) {
     box.style.borderRadius = '12px';
     box.style.backgroundColor = '#fff';
     box.style.marginBottom = '30px';
-    box.dataset.index = i + 1;
-    box.addEventListener('dragover', e => e.preventDefault());
-    box.addEventListener('drop', e => {
-      e.preventDefault();
-      const word = e.dataTransfer.getData('text/plain');
-      handleDrop(word, box);
-    });
     boxes.appendChild(box);
   }
 
@@ -137,37 +127,26 @@ function loadProblem(index) {
 
   shuffled.forEach((i) => {
     const word = currentAnswer[i];
+
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.style.width = '180px';
+    card.style.height = '90px';
+    card.style.margin = '10px';
+
     const img = document.createElement('img');
     img.src = `images/${originalIndex + 1}_${i + 1}_${word}.png`;
     img.alt = word;
-    img.draggable = true;
-    img.style.width = '180px';
-    img.style.height = '90px';
-    img.style.margin = '10px';
-    img.style.borderRadius = '12px';
-    img.addEventListener('dragstart', (e) => {
-      e.dataTransfer.setData('text/plain', word);
-    });
+    img.style.width = '100%';
+    img.style.height = '100%';
     img.onerror = () => {
       console.warn("이미지 로드 실패:", img.src);
-      img.remove();
-      const fallback = document.createElement('div');
-      fallback.textContent = word;
-      fallback.draggable = true;
-      fallback.style.width = '180px';
-      fallback.style.height = '90px';
-      fallback.style.margin = '10px';
-      fallback.style.display = 'flex';
-      fallback.style.justifyContent = 'center';
-      fallback.style.alignItems = 'center';
-      fallback.style.border = '1px solid #ccc';
-      fallback.style.borderRadius = '12px';
-      fallback.addEventListener('dragstart', (e) => {
-        e.dataTransfer.setData('text/plain', word);
-      });
-      container.appendChild(fallback);
+      card.innerHTML = `<span style="font-size: 20px">${word}</span>`;
     };
-    container.appendChild(img);
+
+    card.appendChild(img);
+    card.onclick = () => handleClick(word, card);
+    container.appendChild(card);
   });
 }
 
