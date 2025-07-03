@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>감정 표현 게임</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #fdfdfd;
+      text-align: center;
+      margin: 0;
+      padding: 10px;
+    }
+
+    #progress-bar {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 6px;
+      max-width: 500px;
+      margin: 0 auto 16px;
+    }
+
+    .progress-box {
+      width: 36px;
+      height: 36px;
+      border-radius: 6px;
+      background-color: #eee;
+      cursor: pointer;
+    }
+    .progress-box.correct { background-color: #7dd3fc; }
+    .progress-box.incorrect { background-color: #f87171; }
+
+   
+    .sentence-box {
+      font-size: clamp(1.6rem, 3vw, 2.8rem);
+      padding: 24px;
+      background: #f3f4f6;
+      border-radius: 12px;
+      max-width: 800px;
+      margin: 0 auto 24px;
+      line-height: 1.5;
+    }
+
+    .blank-box {
+      min-width: 80px;
+  text-align: center;
+      display: inline-block;
+      padding: 4px 16px;
+      border-radius: 8px;
+      border: 3px solid #aaa;
+      vertical-align: middle;
+    }
+
+    #game-container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 30px;
+    }
+
+    .card {
+      font-size: clamp(1rem, 2.2vw, 1.4rem);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 14px;
+      border-radius: 10px;
+      height: 50px;
+      min-width: 110px;
+      background-color: #fff;
+      border: 3px solid #ccc;
+      color: #111827;
+      cursor: pointer;
+      box-shadow: 2px 2px 6px rgba(0,0,0,0.06);
+      transition: transform 0.2s, border-color 0.2s;
+    }
+
+    .card:hover {
+      transform: scale(1.08);
+    }
+
+    #celebration {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255,255,255,0.95);
+      z-index: 1000;
+    }
+
+    #final-score-text {
+      font-size: 120px;
+      color: #000;
+      margin-bottom: 20px;
+    }
+
+    #final-score-message {
+      font-size: 36px;
+      margin-bottom: 30px;
+    }
+
+    #celebration button {
+      padding: 14px 28px;
+      font-size: 20px;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      margin: 10px;
+      cursor: pointer;
+    }
+
+    .retry-btn { background-color: #3b82f6; }
+    .exit-btn { background-color: #ef4444; }
+  </style>
+</head>
+<body>
+  <div id="progress-bar"></div>
+  <div id="letter-boxes"></div>
+  <div id="game-container"></div>
+  <div id="celebration">
+    <div id="final-score-text"></div>
+    <div id="final-score-message"></div>
+    <button class="retry-btn" onclick="location.reload()">다시 할게요</button>
+    <button class="exit-btn" onclick="window.location.href='https://withgrowing.tistory.com'">그만 할래요</button>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
