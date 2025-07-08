@@ -64,7 +64,7 @@ function loadProblem(index) {
   container.innerHTML = '';
   const answerLetters = currentAnswer.split('');
   const allLetters = new Set(answerLetters);
-  while (allLetters.size < 10) {
+  while (allLetters.size < 6) {
     const randWord = animalWords[Math.floor(Math.random() * animalWords.length)];
     const randLetter = randWord[Math.floor(Math.random() * randWord.length)];
     allLetters.add(randLetter);
