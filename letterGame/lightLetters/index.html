@@ -1,0 +1,142 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>light letters game</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+      background-color: #fdfdfd;
+      padding: 10px;
+            min-height: 100vh;             /* 화면 높이 전체 사용 */
+
+    }
+    #progress-bar {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 6px;
+      max-width: 500px;
+      margin: 0 auto 16px;
+    }
+    .progress-box {
+      width: 36px;
+      height: 36px;
+      border-radius: 6px;
+      background-color: #eee;
+            cursor: pointer;
+
+    }
+    .progress-box.correct { background-color: #7dd3fc; }
+    .progress-box.incorrect { background-color: #f87171; }
+
+    #problem-card {
+      position: relative;
+      margin-bottom: 16px;
+    }
+    #problemImage {
+      with: 90%
+      max-width: 500px;
+      border-radius: 20px;
+    }
+
+    #letter-boxes {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 30px;
+    }
+    .letter-box {
+  width: 80px;
+  height: 80px;
+  border: 2px solid #aaa;
+  margin: 0 5px;
+  text-align: center;
+  font-size: 48px; /* ← 글자 크게 보이도록 수정 */
+  font-weight: bold;
+  line-height: 60px;
+  border-radius: 12px;
+   display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+    #game-container {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 12px;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    .card img {
+      width: 100%;
+      height: 100%;
+    }
+    .card {
+  width: 100px;
+  height: 100px;
+  background-color: white;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;           /* ✅ 글자 크게 */
+  font-weight: bold;         /* ✅ 보기 강조 */
+  cursor: pointer;
+}
+
+
+
+    #celebration {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255,255,255,0.95);
+      z-index: 1000;
+    }
+    #final-score-text {
+      font-size: 150px;
+      color: #000;
+      margin-bottom: 20px;
+    }
+    #final-score-message {
+      font-size: 36px;
+      margin-bottom: 30px;
+    }
+    #celebration button {
+      padding: 14px 28px;
+      font-size: 20px;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      margin: 10px;
+      cursor: pointer;
+    }
+    .retry-btn { background-color: #3b82f6; }
+    .exit-btn { background-color: #ef4444; }
+  </style>
+</head>
+<body>
+<div id="progress-bar"></div>
+<div id="problem-card">
+<img id="problemImage" src="images/problems/blue5.png" style="width: 300px; border-radius: 20px;" />
+</div>
+<div id="letter-boxes"></div>
+<div id="game-container"></div>
+<div id="celebration">
+  <div id="final-score-text"></div>
+  <div id="final-score-message"></div>
+  <button class="retry-btn" onclick="location.reload()">다시 할게요</button>
+  <button class="exit-btn" onclick="window.location.href='https://withgrowing.tistory.com/entry/%EA%B2%8C%EC%9E%84-%ED%95%99%EC%8A%B5-%EC%84%BC%ED%84%B0-%ED%99%88/'">그만 할래요</button>
+</div>
+<script src="script.js"></script>
+</body>
+</html>
