@@ -158,7 +158,7 @@ function loadProblem(index) {
     box.className = 'letter-box';
     box.style.width = '180px';
     box.style.height = '100px';
-    box.style.border = '2px solid #888';
+    box.style.border = '1px solid #888';
     box.style.borderRadius = '12px';
     box.style.backgroundColor = '#fff';
     box.style.fontSize = '28px';
