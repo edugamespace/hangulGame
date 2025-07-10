@@ -156,16 +156,15 @@ function loadProblem(index) {
   for (let i = 0; i < 4; i++) {
     const box = document.createElement('div');
     box.className = 'letter-box';
-    box.style.width = '140px';
+    box.style.width = '180px';
     box.style.height = '100px';
     box.style.border = '2px solid #888';
     box.style.borderRadius = '12px';
     box.style.backgroundColor = '#fff';
-    box.style.fontSize = '22px';
+    box.style.fontSize = '28px';
     box.style.display = 'flex';
     box.style.alignItems = 'center';
     box.style.justifyContent = 'center';
-    box.style.fontWeight = 'bold';
     boxes.appendChild(box);
   }
 
@@ -178,8 +177,7 @@ function loadProblem(index) {
     card.className = 'card';
     card.textContent = word;
     card.style.backgroundColor = currentColor;
-    card.style.fontSize = '22px';
-    card.style.fontWeight = 'bold';
+    card.style.fontSize = '28px';
     card.onclick = () => handleClick(word, card);
     container.appendChild(card);
   });
