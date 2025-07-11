@@ -1,14 +1,16 @@
-// ✅ 단어 3개로 문장을 완성하는 게임 (드래그 앤 드롭 버전)
-
 const sentenceProblems = [
   ["나는", "사과를", "먹었어"],
   ["엄마가", "요리를", "하셔"],
   ["나는", "물을", "마셨어"],
+  ["나는", "사과를", "먹었어"],
   ["우리는", "집에", "갈거야"],
   ["나는", "할머니를", "사랑해"],
+  ["나는", "우유를", "마셨어"],
   ["고양이가", "조용히", "걸어가"],
-  ["누나가", "노래를", "불러"],
+  ["동생이", "조용히", "걸어가"],
+  ["친구가", "조용히", "걸어가"],
   ["동생이", "울고", "있어"],
+  ["누나가", "노래를", "불러"],
   ["아빠는", "책을", "읽어"],
   ["친구가", "활짝", "웃어"],
   ["강아지가", "멍멍", "짖어"],
@@ -24,11 +26,77 @@ const sentenceProblems = [
   ["우리는", "게임을", "했어"],
   ["비가", "많이", "와요"],
   ["엄마가", "청소를", "했어"],
-  ["나는", "모자를", "썼어"]
+  ["아빠는", "청소를", "하셔"],
+  ["나는", "모자를", "썼어"],
+  ["엄마가", "활짝", "웃어"],
+  ["산에", "나무가", "많아"],
+  ["바람이", "불어서", "추워"],
+  ["눈이", "많이", "와"],
+  ["우리는", "눈사람을", "만들었어"],
+  ["커다란", "눈사람", "만들자"],
+  ["같이", "청소", "하자"],
+  ["내", "침대는", "푹신해"],
+  ["나는", "동생을", "사랑해"],
+  ["우리는", "계곡에", "왔어요"],
+  ["시원한", "수박을", "먹어요"],
+  ["친구가", "나를", "불러"],
+  ["아빠가", "나를", "부르셔"],
+  ["엄마가", "나를", "부르셔"],
+  ["할머니", "심부름을", "했어"],
+  ["식물이", "쑥쑥", "자라"],
+  ["나무에서", "열매를", "땄어"],
+  ["과일을", "따서", "먹어"],
+  ["딸기", "케이크를", "만들자"],
+  ["고양이가", "자고", "있어"],
+  ["나는", "강아지를", "좋아해"],
+  ["모자를", "쓰고", "나가자"],
+  ["우산을", "쓰고", "가자"],
+  ["학교", "앞에서", "만나"],
+  ["우리", "집에", "놀러와"],
+  ["같이", "떡볶이", "먹자"],
+  ["너는", "무엇을", "좋아하니"],
+  ["나는", "정직하게", "말해"],
+  ["거짓말을", "하면", "안돼"],
+  ["아빠랑", "자전거를", "타"],
+  ["무거운", "가방을", "들었다"],
+  ["엄마가", "나를", "부르신다"],
+  ["아기가", "크게", "울었다"],
+  ["우리는", "학교에", "간다"],
+  ["비가", "많이", "온다"],
+  ["나는", "우산을", "챙겼어"],
+  ["달리던", "아이가", "넘어졌다"],
+  ["언니는", "노래를", "부른다"],
+  ["우리", "같이", "놀자"],
+  ["나는", "편지를", "썼다"],
+  ["선생님이", "자세히", "알려주신다"],
+  ["아기가", "장난감을", "만진다"],
+  ["아이는", "공을", "찬다"],
+  ["언니가", "피아노를", "친다"],
+  ["엄마가", "마트에", "간다"],
+  ["나는", "선물을", "받았다"],
+  ["선생님이", "책을", "읽어주신다"],
+  ["강아지가", "꼬리를", "흔든다"],
+  ["친구의", "전화를", "받았다"],
+  ["선생님의", "칭찬을", "들었다"],
+  ["엄마의", "전화를", "받았다"],
+  ["나는", "과자를", "먹었어"],
+  ["누나는", "요리를", "잘해"],
+  ["고양이가", "나를", "봤다"],
+  ["강아지가", "인형을", "물었어"],
+  ["엄마가", "나를", "안았어"],
+  ["나는", "공을", "받았다"],
+  ["아이가", "물을", "흘렸다"],
+  ["나는", "숙제를", "끝냈다"]
+];
+
+
+
+const backgroundColors = [
+  "#fcfa9b", "#d9fc9b", "#c3fce9", "#c3f1fc", "#d5dafb",
+  "#e2d5fb", "#f3d5fb", "#ffdaea", "#fbbaad", "#fdf0d8"
 ];
 
 const selectedProblems = sentenceProblems
-  .map((problem, index) => ({ problem, index }))
   .sort(() => Math.random() - 0.5)
   .slice(0, 20);
 
@@ -43,6 +111,8 @@ let currentIndex = 0;
 let results = Array(selectedProblems.length).fill(null);
 let filledCount = 0;
 let currentAnswer = [];
+let currentColor = '';
+let startTime = Date.now();
 
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
@@ -72,22 +142,14 @@ function playSound(name) {
 }
 
 function handleClick(word, card) {
-  if (filledCount >= 3) return;
-
-  const targetWord = currentAnswer[filledCount];
-  playSound(word);
+  if (filledCount >= 4) return;
 
   const box = boxes.children[filledCount];
-  const originalIndex = selectedProblems[currentIndex].index;
-  const wordIndex = selectedProblems[currentIndex].problem.indexOf(word);
-  const img = document.createElement('img');
-  img.src = `images/${originalIndex + 1}_${filledCount + 1}_${word}.png`;
-  img.style.width = '100%';
-  img.style.height = '100%';
-  img.onerror = () => console.warn("이미지 로드 실패:", img.src);
-  box.appendChild(img);
+  box.textContent = word;
+  box.style.backgroundColor = currentColor;
+  playSound(word);
 
-  if (word === targetWord) {
+  if (word === currentAnswer[filledCount]) {
     filledCount++;
     card.classList.add("selected");
     if (filledCount === 3) {
@@ -105,46 +167,38 @@ function handleClick(word, card) {
 }
 
 function loadProblem(index) {
-  const { problem, index: originalIndex } = selectedProblems[index];
+  const problem = selectedProblems[index];
   currentAnswer = problem;
   filledCount = 0;
+  currentColor = backgroundColors[Math.floor(Math.random() * backgroundColors.length)];
 
+  // 문제 박스 초기화
   boxes.innerHTML = '';
   for (let i = 0; i < 3; i++) {
     const box = document.createElement('div');
     box.className = 'letter-box';
     box.style.width = '180px';
-    box.style.height = '90px';
+    box.style.height = '100px';
     box.style.border = '1px solid #888';
     box.style.borderRadius = '12px';
     box.style.backgroundColor = '#fff';
-    box.style.marginBottom = '30px';
+    box.style.fontSize = '28px';
+    box.style.display = 'flex';
+    box.style.alignItems = 'center';
+    box.style.justifyContent = 'center';
     boxes.appendChild(box);
   }
 
+  // 보기 카드 생성
   container.innerHTML = '';
-  const shuffled = shuffle([0, 1, 2]);
+  const shuffled = shuffle([...problem]);
 
-  shuffled.forEach((i) => {
-    const word = currentAnswer[i];
-
+  shuffled.forEach(word => {
     const card = document.createElement('div');
     card.className = 'card';
-    card.style.width = '180px';
-    card.style.height = '90px';
-    card.style.margin = '10px';
-
-    const img = document.createElement('img');
-    img.src = `images/${originalIndex + 1}_${i + 1}_${word}.png`;
-    img.alt = word;
-    img.style.width = '100%';
-    img.style.height = '100%';
-    img.onerror = () => {
-      console.warn("이미지 로드 실패:", img.src);
-      card.innerHTML = `<span style="font-size: 20px">${word}</span>`;
-    };
-
-    card.appendChild(img);
+    card.textContent = word;
+    card.style.backgroundColor = currentColor;
+    card.style.fontSize = '28px';
     card.onclick = () => handleClick(word, card);
     container.appendChild(card);
   });
@@ -152,18 +206,26 @@ function loadProblem(index) {
 
 function nextProblem() {
   if (results.every(r => r !== null)) {
+    const endTime = Date.now();
+    const totalSeconds = Math.floor((endTime - startTime) / 1000);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+
     const score = results.filter(r => r).length * 5;
     document.getElementById('final-score-text').textContent = `${score}점`;
     document.getElementById('final-score-message').textContent =
-      score >= 55 ? '🎆 참 잘했어요!' : '😊 조금 더 연습해 볼까요?';
+      `${minutes}분 ${seconds}초 걸렸어요`;
+
     celebration.style.display = 'flex';
     return;
   }
+
   if (currentIndex < results.length - 1) {
     currentIndex++;
     loadProblem(currentIndex);
   }
 }
 
+// 초기 실행
 updateProgressBar();
 loadProblem(currentIndex);
